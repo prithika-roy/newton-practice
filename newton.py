@@ -42,6 +42,8 @@ def optimize(f, x0, epsilon=1e-3, difference=1e-5):
     Returns:
         float: Approximate optimizer value after convergence.
     """
+    if not isinstance(x0, (int, float)):
+        raise TypeError("`x0` must be numeric")
     x = x0
     while True:
         first_der = derivative(f, x, epsilon)
