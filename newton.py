@@ -1,4 +1,4 @@
-def derivative(f, x, epsilon=1e-3):
+def derivative(f, x, epsilon=1e-5):
     """Approximate the first derivative of a function at a point.
 
     Args:
@@ -13,7 +13,7 @@ def derivative(f, x, epsilon=1e-3):
     return (f(x + epsilon) - f(x)) / epsilon
 
 
-def second_derivative(f, x, epsilon=1e-3):
+def second_derivative(f, x, epsilon=1e-5):
     """Approximate the second derivative of a function at a point.
 
     Args:
@@ -28,7 +28,7 @@ def second_derivative(f, x, epsilon=1e-3):
     return (derivative(f, x + epsilon) - derivative(f, x)) / epsilon
 
 
-def optimize(f, x0, epsilon=1e-3, difference=1e-5):
+def optimize(f, x0, epsilon=1e-3, difference=1e-4):
     """Use Newton's method to optimize a function starting from an initial guess.
 
     Args:
