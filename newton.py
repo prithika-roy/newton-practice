@@ -1,57 +1,17 @@
-def derivative(f, x, epsilon=1e-5):
-    """Approximate the first derivative of a function at a point.
-
-    Args:
-        f (callable): Function to differentiate.
-        x (float): Point at which to evaluate the derivative.
-        epsilon (float, optional): Small step size used for finite differences.
-            Defaults to 1e-3.
-
-    Returns:
-        float: Approximate derivative of f at x.
-    """
-    return (f(x + epsilon) - f(x)) / epsilon
+import numpy as np
+from scipy.differentiate import jacobian, hessian
 
 
-def second_derivative(f, x, epsilon=1e-5):
-    """Approximate the second derivative of a function at a point.
+def newton_multivariate(f, x0, tolerance=1e-4, max_iter=1000):
+    x = np.asarray(x0, dtype=float)
 
-    Args:
-        f (callable): Function to differentiate twice.
-        x (float): Point at which to evaluate the second derivative.
-        epsilon (float, optional): Small step size used for finite differences.
-            Defaults to 1e-3.
+    for _ in range(max_iter):
+        grad = jacobian(f, x).df
+        H = hessian(f, x).ddf
 
-    Returns:
-        float: Approximate second derivative of f at x.
-    """
-    return (derivative(f, x + epsilon) - derivative(f, x)) / epsilon
+        if np.linalg.norm(grad) < tolerance:
+            break
 
+        x = x - np.linalg.solve(H, grad)
 
-def optimize(f, x0, epsilon=1e-3, difference=1e-4):
-    """Use Newton's method to optimize a function starting from an initial guess.
-
-    Args:
-        f (callable): Function to optimize.
-        x0 (float): Initial guess for the optimizer.
-        epsilon (float, optional): Small step size used for finite-difference
-            derivatives. Defaults to 1e-3.
-        difference (float, optional): Convergence threshold based on the change
-            in x between iterations. Defaults to 1e-5.
-
-    Returns:
-        float: Approximate optimizer value after convergence.
-    """
-    if not isinstance(x0, (int, float)):
-        raise TypeError("`x0` must be numeric")
-    x = x0
-    while True:
-        first_der = derivative(f, x, epsilon)
-        second_der = second_derivative(f, x, epsilon)
-
-        x_new = x - first_der / second_der
-
-        if abs(x_new - x) < difference:
-            return x_new
-
-        x = x_new
+    return x
